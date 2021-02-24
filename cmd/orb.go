@@ -669,6 +669,12 @@ func publishOrb(opts orbOptions) error {
 
 	fmt.Printf("Orb `%s` was published.\n", ref)
 
+	orbIsPrivate, _ := api.OrbIsPrivate(opts.cl, namespace, orb)
+
+	if !orbIsPrivate {
+		fmt.Println("Please note that this is an open orb and is world-readable.")
+	}
+
 	if references.IsDevVersion(version) {
 		fmt.Printf("Note that your dev label `%s` can be overwritten by anyone in your organization.\n", version)
 		fmt.Printf("Your dev orb will expire in 90 days unless a new version is published on the label `%s`.\n", version)
@@ -743,6 +749,12 @@ func incrementOrb(opts orbOptions) error {
 	}
 
 	fmt.Printf("Orb `%s` has been incremented to `%s/%s@%s`.\n", ref, namespace, orb, response.HighestVersion)
+
+	orbIsPrivate, _ := api.OrbIsPrivate(opts.cl, namespace, orb)
+
+	if !orbIsPrivate {
+		fmt.Println("Please note that this is an open orb and is world-readable.")
+	}
 	return nil
 }
 
@@ -769,6 +781,11 @@ func promoteOrb(opts orbOptions) error {
 	}
 
 	fmt.Printf("Orb `%s` was promoted to `%s/%s@%s`.\n", ref, namespace, orb, response.HighestVersion)
+	orbIsPrivate, _ := api.OrbIsPrivate(opts.cl, namespace, orb)
+
+	if !orbIsPrivate {
+		fmt.Println("Please note that this is an open orb and is world-readable.")
+	}
 	return nil
 }
 

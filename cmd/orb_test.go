@@ -399,16 +399,37 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						}
 					  }`
 
+					gqlOrbResponse := `{
+					"orb": {
+						"errors": [],
+						"orb": {
+							"isPrivate": false
+						}
+					}
+				}`
+
+					expectedOrbRequest := `{
+              "query": "\n\t\tquery ($name: String!) {\n\t\t\torb(name: $name) {\n\t\t\t\tisPrivate\n\t\t\t}\n\t\t}\n\t",
+              "variables": {
+                "name": "my/orb"
+              }
+            }`
+
 					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
 						Status:   http.StatusOK,
 						Request:  expectedPublishRequest,
 						Response: gqlPublishResponse})
+					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
+						Status:   http.StatusOK,
+						Request:  expectedOrbRequest,
+						Response: gqlOrbResponse})
 
 					By("running the command")
 					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
 					Expect(err).ShouldNot(HaveOccurred())
 					Eventually(session.Out).Should(gbytes.Say("Orb `my/orb@0.0.1` was published."))
+					Eventually(session.Out).Should(gbytes.Say("Please note that this is an open orb and is world-readable."))
 					Eventually(session).Should(gexec.Exit(0))
 				})
 
@@ -484,16 +505,37 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						}
 					  }`
 
+					gqlOrbResponse := `{
+					"orb": {
+						"errors": [],
+						"orb": {
+							"isPrivate": false
+						}
+					}
+				}`
+
+					expectedOrbRequest := `{
+              "query": "\n\t\tquery ($name: String!) {\n\t\t\torb(name: $name) {\n\t\t\t\tisPrivate\n\t\t\t}\n\t\t}\n\t",
+              "variables": {
+                "name": "my/orb"
+              }
+            }`
+
 					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
 						Status:   http.StatusOK,
 						Request:  expectedPublishRequest,
 						Response: gqlPublishResponse})
+					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
+						Status:   http.StatusOK,
+						Request:  expectedOrbRequest,
+						Response: gqlOrbResponse})
 
 					By("running the command")
 					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
 					Expect(err).ShouldNot(HaveOccurred())
 					Eventually(session.Out).Should(gbytes.Say("Orb `my/orb@dev:foo` was published."))
+					Eventually(session.Out).Should(gbytes.Say("Please note that this is an open orb and is world-readable."))
 					Eventually(session).Should(gexec.Exit(0))
 				})
 
@@ -584,6 +626,22 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						}
 					  }`
 
+					gqlOrbResponse := `{
+					"orb": {
+						"errors": [],
+						"orb": {
+							"isPrivate": false
+						}
+					}
+				}`
+
+					expectedOrbRequest := `{
+              "query": "\n\t\tquery ($name: String!) {\n\t\t\torb(name: $name) {\n\t\t\t\tisPrivate\n\t\t\t}\n\t\t}\n\t",
+              "variables": {
+                "name": "my/orb"
+              }
+            }`
+
 					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
 						Status:   http.StatusOK,
 						Request:  expectedVersionRequest,
@@ -592,12 +650,17 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						Status:   http.StatusOK,
 						Request:  expectedPublishRequest,
 						Response: gqlPublishResponse})
+					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
+						Status:   http.StatusOK,
+						Request:  expectedOrbRequest,
+						Response: gqlOrbResponse})
 
 					By("running the command")
 					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
 					Expect(err).ShouldNot(HaveOccurred())
 					Eventually(session.Out).Should(gbytes.Say("Orb `my/orb` has been incremented to `my/orb@0.1.0`."))
+					Eventually(session.Out).Should(gbytes.Say("Please note that this is an open orb and is world-readable."))
 					Eventually(session).Should(gexec.Exit(0))
 				})
 
@@ -708,6 +771,22 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						}
 					  }`
 
+					gqlOrbResponse := `{
+					"orb": {
+						"errors": [],
+						"orb": {
+							"isPrivate": false
+						}
+					}
+				}`
+
+					expectedOrbRequest := `{
+              "query": "\n\t\tquery ($name: String!) {\n\t\t\torb(name: $name) {\n\t\t\t\tisPrivate\n\t\t\t}\n\t\t}\n\t",
+              "variables": {
+                "name": "my/orb"
+              }
+            }`
+
 					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
 						Status:   http.StatusOK,
 						Request:  expectedVersionRequest,
@@ -716,12 +795,17 @@ See a full explanation and documentation on orbs here: https://circleci.com/docs
 						Status:   http.StatusOK,
 						Request:  expectedPromoteRequest,
 						Response: gqlPromoteResponse})
+					tempSettings.AppendPostHandler(token, clitest.MockRequestResponse{
+						Status:   http.StatusOK,
+						Request:  expectedOrbRequest,
+						Response: gqlOrbResponse})
 
 					By("running the command")
 					session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
 
 					Expect(err).ShouldNot(HaveOccurred())
 					Eventually(session.Out).Should(gbytes.Say("Orb `my/orb@dev:foo` was promoted to `my/orb@0.1.0`."))
+					Eventually(session.Out).Should(gbytes.Say("Please note that this is an open orb and is world-readable."))
 					Eventually(session).Should(gexec.Exit(0))
 				})
 

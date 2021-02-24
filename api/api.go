@@ -146,6 +146,13 @@ type OrbIDResponse struct {
 	}
 }
 
+// OrbIsPrivateResponse matches the GQL response for fetching an Orb and isPrivate
+type OrbIsPrivateResponse struct {
+	Orb struct {
+		IsPrivate bool
+	}
+}
+
 // CreateNamespaceResponse type matches the data shape of the GQL response for
 // creating a namespace
 type CreateNamespaceResponse struct {
@@ -753,6 +760,32 @@ func OrbID(cl *graphql.Client, namespace string, orb string) (*OrbIDResponse, er
 	}
 
 	return nil, fmt.Errorf("the '%s' orb does not exist in the '%s' namespace. Did you misspell the namespace or the orb name?", orb, namespace)
+}
+
+// OrbIsPrivate fetches Orb and returns IsPrivate field
+func OrbIsPrivate(cl *graphql.Client, namespace string, orb string) (bool, error) {
+	name := namespace + "/" + orb
+
+	var response OrbIsPrivateResponse
+
+	query := `
+		query ($name: String!) {
+			orb(name: $name) {
+				isPrivate
+			}
+		}
+	`
+
+	request := graphql.NewRequest(query)
+	request.SetToken(cl.Token)
+	request.Var("name", name)
+
+	err := cl.Run(request, &response)
+	if err != nil {
+		return false, err
+	}
+
+	return response.Orb.IsPrivate, nil
 }
 
 // CreateImportedNamespace creates an imported namespace with the provided name. An imported namespace
